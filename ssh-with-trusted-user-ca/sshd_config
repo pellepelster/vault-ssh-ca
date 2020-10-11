@@ -1,0 +1,6 @@
+Port 22
+UsePAM yes
+HostKey /ssh/ssh_host_rsa_key
+HostCertificate /ssh/ssh_host_rsa_key_signed.pub
+
+TrustedUserCAKeys /ssh/user_ssh_ca.pub

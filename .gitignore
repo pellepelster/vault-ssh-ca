@@ -1,0 +1,6 @@
+ssh-keys
+.snippets
+known_hosts
+*.tfstate
+*.tfstate.backup
+.terraform

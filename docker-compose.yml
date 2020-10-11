@@ -1,0 +1,32 @@
+version: "3"
+services:
+    ssh-with-authorized-keys:
+        build: ssh-with-authorized-keys
+        hostname: ssh-with-authorized-keys
+        ports: 
+            - "1022:22"
+            
+    ssh-with-signed-hostkey:
+        build: ssh-with-signed-hostkey
+        hostname: ssh-with-signed-hostkey
+        ports: 
+            - "2022:22"
+        links: 
+            - vault
+
+    ssh-with-trusted-user-ca:
+        build: ssh-with-trusted-user-ca
+        hostname: ssh-with-trusted-user-ca
+        ports: 
+            - "3022:22"
+        links: 
+            - vault
+        
+    vault:
+        image: vault
+        ports:
+            - 8200:8200
+        environment:
+            - "VAULT_DEV_ROOT_TOKEN_ID=root-token"
+            
+            
