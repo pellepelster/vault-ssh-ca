@@ -4,3 +4,4 @@ known_hosts
 *.tfstate
 *.tfstate.backup
 .terraform
+.bin

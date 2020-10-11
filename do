@@ -80,26 +80,8 @@ function task_prepare {
   docker-compose -f "${DIR}/docker-compose.yml" build
 }
 
-function task_generate_and_insert_snippets() {
-
-  rm -rf "${SNIPPETS_TEMP_DIR}"
-  mkdir -p "${SNIPPETS_TEMP_DIR}" || true 
-
-  echo "generating snippets for '${DIR}'"
-  (
-    for file in $(git ls-tree -r master --name-only .); do
-      if [[ $file != *.md ]]; then
-        GITHUB_REPOSITORY="pellepelster/ctuhl" SNIPPETS_TEMP_DIR="${SNIPPETS_TEMP_DIR}" REPOSITORY_FILE_PREFIX="vault" bundle exec ruby "${DIR}/../lib/ruby/extract_snippets.rb" "${file}"
-      fi
-    done
-  )
-  
-  local file="${DIR}/POST.md"
-  echo "inserting snippets for '${file}'"
-  (
-    GITHUB_REPOSITORY="pellepelster/ctuhl" SNIPPETS_TEMP_DIR="${SNIPPETS_TEMP_DIR}" REPOSITORY_FILE_PREFIX="vault" FILES_DIR="${DIR}" bundle exec ruby "${DIR}/../lib/ruby/insert_snippets.rb" "${file}"
-  )
-
+function task_update_documentation() {
+  snex --source ${DIR}/POST.md  -snippets ${DIR} -template-file ${DIR}/hugo.template
 }
 
 function task_create_host_signing_key {
@@ -183,7 +165,7 @@ case ${arg} in
   create-user-signing-key) task_create_user_signing_key ;;
   create-known-hosts) task_create_known_hosts ;;
   ssh-with-signed-hostkey) task_ssh_with_signed_hostkey ;;
-  generate-and-insert-snippets) task_generate_and_insert_snippets ;;
+  update-documentation) task_update_documentation ;;
   test) task_test ;;
   *) task_usage ;;
 esac
